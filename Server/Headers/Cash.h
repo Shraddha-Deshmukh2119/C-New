@@ -13,13 +13,13 @@ class Cash
         void operator -(double i); // Cash out
 };
 
-void Cash::operator +(double i) // Operator for Cash in
+inline void Cash::operator +(double i) // Operator for Cash in
 {
     in += i;
     finl += i;
 }
 
-void Cash::operator -(double i) // Operator for Cash out
+inline void Cash::operator -(double i) // Operator for Cash out
 {
     out += i;
     finl -= i;

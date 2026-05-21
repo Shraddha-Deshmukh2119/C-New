@@ -1,0 +1,5 @@
+if(EXISTS "C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/test/online_shopping_tests[1]_tests.cmake")
+  include("C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/test/online_shopping_tests[1]_tests.cmake")
+else()
+  add_test(online_shopping_tests_NOT_BUILT online_shopping_tests_NOT_BUILT)
+endif()

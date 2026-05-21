@@ -59,8 +59,31 @@ SOCKET Thread::getClient() const
 
 void Thread::endServer()
 {
-    data.server->exit = true;
+    if (data.server != nullptr)
+        data.server->exit = true;
 }
+
+#ifdef ONLINE_SHOPPING_UNIT_TEST
+void Thread::enableTestMode()
+{
+    testMode = true;
+}
+
+void Thread::pushRecv(const std::string& message)
+{
+    recvQueue.push_back(message);
+}
+
+const std::vector<std::string>& Thread::sentMessages() const
+{
+    return sendLog;
+}
+
+void Thread::clearSentMessages()
+{
+    sendLog.clear();
+}
+#endif
 
 void worker(Data *d)
 {
@@ -78,6 +101,13 @@ void worker(Data *d)
 
 int Thread::Send(const std::string& str) const
 {
+#ifdef ONLINE_SHOPPING_UNIT_TEST
+    if (testMode)
+    {
+        sendLog.push_back(str);
+        return static_cast<int>(str.size());
+    }
+#endif
     return send(data.client, str.c_str(), str.size() + 1, 0);
 }
 
@@ -97,6 +127,19 @@ int Thread::Send(const double& var) const
 
 int Thread::Rec(std::string &str)
 {
+#ifdef ONLINE_SHOPPING_UNIT_TEST
+    if (testMode)
+    {
+        if (recvQueue.empty())
+        {
+            str.clear();
+            return 0;
+        }
+        str = recvQueue.front();
+        recvQueue.pop_front();
+        return static_cast<int>(str.size());
+    }
+#endif
     char buffer[4069];
     ZeroMemory(buffer, sizeof(buffer));
     

@@ -1,0 +1,21 @@
+# ninja log v7
+6	188	8010670165372381	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-mkdir	a9ec7476f5a5952e
+6	188	8010670165372381	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-mkdir	a9ec7476f5a5952e
+189	3211	8010670194711782	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-download	8cc83b8e065cce41
+189	3211	8010670194711782	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-download	8cc83b8e065cce41
+3212	3694	8010670200294661	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-update	4f5b13bf4d92afe2
+3212	3694	8010670200294661	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-update	4f5b13bf4d92afe2
+3695	3969	8010670203135704	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-patch	9580f8a5a371cd5c
+3695	3969	8010670203135704	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-patch	9580f8a5a371cd5c
+3969	4212	8010670205561987	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-configure	7d99686201a81c2f
+3969	4212	8010670205561987	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-configure	7d99686201a81c2f
+4212	4634	8010670209803743	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-build	431a7dd24a2c1f0a
+4212	4634	8010670209803743	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-build	431a7dd24a2c1f0a
+4635	4873	8010670212290068	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-install	eb169693a6df757c
+4635	4873	8010670212290068	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-install	eb169693a6df757c
+4873	5079	8010670214185472	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-test	f045294236486d52
+4873	5079	8010670214185472	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-test	f045294236486d52
+5080	5378	8010670217304040	CMakeFiles/googletest-populate-complete	4b95066fdf6c096d
+5080	5378	8010670217304040	googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-done	4b95066fdf6c096d
+5080	5378	8010670217304040	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/CMakeFiles/googletest-populate-complete	4b95066fdf6c096d
+5080	5378	8010670217304040	C:/Users/Prathemesh/Desktop/Cpp/online-shopping-system/build/_deps/googletest-subbuild/googletest-populate-prefix/src/googletest-populate-stamp/googletest-populate-done	4b95066fdf6c096d
