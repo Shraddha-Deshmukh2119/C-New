@@ -95,6 +95,10 @@ void Server::run()
                 break;
             }
         }
+#ifdef ONLINE_SHOPPING_UNIT_TEST
+        if (exit)
+            return;
+#endif
         WaitForMultipleObjects(CLIENTS, handles, FALSE, INFINITE);
     }
 }

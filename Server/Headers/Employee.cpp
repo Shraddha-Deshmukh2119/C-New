@@ -137,7 +137,7 @@ void Employee::complain()
         default:
             cerr << " Invalid input!\n";
             fflush(stdin);
-            cin.get();
+            getch();
             break;
         }
     }

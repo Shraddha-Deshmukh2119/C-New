@@ -20,6 +20,10 @@ public:
     bool start();
     void run();
 
+#ifdef ONLINE_SHOPPING_UNIT_TEST
+    void requestStop() { exit = true; }
+#endif
+
 private:
     WSAData wsaData;
     SocketSet sockets;

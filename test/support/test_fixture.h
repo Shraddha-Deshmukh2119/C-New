@@ -30,7 +30,14 @@ protected:
                              const std::string& password = "emppass");
 
     void queueRecv(Thread& thread, const std::initializer_list<std::string>& messages);
+    void queueRecvAll(Thread& thread, const std::vector<std::string>& messages);
     std::string lastSent(const Thread& thread) const;
+
+    void writeGoodsFileLowStockProduct1(int stock = 6);
+    void writeGoodsFileInvalid();
+    void appendSignupFields(std::vector<std::string>& q,
+                            const std::string& username = "newuser",
+                            const std::string& password = "newpass");
 
     std::unique_ptr<Server> server;
     std::unique_ptr<Thread> thread;

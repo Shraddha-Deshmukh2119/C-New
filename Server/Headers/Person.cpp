@@ -115,6 +115,7 @@ void Person::profile(const string& fileName, const string& Lookup)
         cout << "Sorry! An error occured while processing the data.\n";
         getch();
         (*server).endServer();
+        return;
     }
 
     // Reading and displaying the required record

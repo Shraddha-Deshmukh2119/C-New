@@ -108,6 +108,50 @@ void ShoppingSystemTest::queueRecv(Thread& t, const std::initializer_list<std::s
         t.pushRecv(message);
 }
 
+void ShoppingSystemTest::queueRecvAll(Thread& t, const std::vector<std::string>& messages)
+{
+    for (const auto& message : messages)
+        t.pushRecv(message);
+}
+
+void ShoppingSystemTest::writeGoodsFileLowStockProduct1(int stock)
+{
+    writeGoodsFile();
+    std::ifstream in("goods.txt");
+    std::vector<std::string> lines;
+    std::string line;
+    while (std::getline(in, line))
+        lines.push_back(line);
+    in.close();
+
+    for (std::size_t i = 0; i < lines.size(); ++i)
+    {
+        if (lines[i].rfind("Name: Product1", 0) == 0 && i + 1 < lines.size() && lines[i + 1].rfind("Stock:", 0) == 0)
+            lines[i + 1] = "Stock: " + std::to_string(stock);
+    }
+
+    std::ofstream out("goods.txt", std::ios::trunc);
+    for (const auto& l : lines)
+        out << l << "\n";
+}
+
+void ShoppingSystemTest::writeGoodsFileInvalid()
+{
+    std::ofstream file("goods.txt");
+    file << "corrupt data only\n";
+}
+
+void ShoppingSystemTest::appendSignupFields(std::vector<std::string>& q,
+                                            const std::string& username,
+                                            const std::string& password)
+{
+    q.insert(q.end(), {
+        "Test User", "30", "M", "05", "10", "1995",
+        "42101-1234567-1", "user@example.com", "03009999999",
+        username, password
+    });
+}
+
 std::string ShoppingSystemTest::lastSent(const Thread& t) const
 {
     const auto& sent = t.sentMessages();
