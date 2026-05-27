@@ -1,18 +1,16 @@
-set(GTEST_ROOT "${CMAKE_BINARY_DIR}/_deps/googletest-src")
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-if(EXISTS "${GTEST_ROOT}/CMakeLists.txt")
-    add_subdirectory(${GTEST_ROOT} ${CMAKE_BINARY_DIR}/_deps/googletest-build EXCLUDE_FROM_ALL)
-else()
-    include(FetchContent)
-    FetchContent_Declare(
-        googletest
-        URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
-        DOWNLOAD_EXTRACT_TIMESTAMP TRUE
-    )
-    FetchContent_MakeAvailable(googletest)
-endif()
+# Clean, modern FetchContent approach (Safe to leave here if removed from root)
+include(FetchContent)
+FetchContent_Declare(
+    googletest
+    URL https://github.com/google/googletest/archive/refs/tags/v1.14.0.zip
+    DOWNLOAD_EXTRACT_TIMESTAMP TRUE
+)
+# Bring gtest and gtest_main targets into scope
+FetchContent_MakeAvailable(googletest)
 
+# --- Test Support Library ---
 add_library(oss_test_support STATIC
     support/test_fixture.cpp
     support/test_runtime.cpp
@@ -21,8 +19,11 @@ target_include_directories(oss_test_support PRIVATE
     ${CMAKE_SOURCE_DIR}/Server
     ${CMAKE_SOURCE_DIR}/Server/Headers
 )
+# CRITICAL FIX: Link gtest to your support library so test_fixture.h can find <gtest/gtest.h>
+target_link_libraries(oss_test_support PUBLIC gtest)
 target_compile_definitions(oss_test_support PRIVATE ONLINE_SHOPPING_UNIT_TEST)
 
+# --- Source File Mappings ---
 set(CLIENT_PROD_SOURCES
     ${CMAKE_SOURCE_DIR}/Client/Headers/Client.cpp
 )
@@ -66,6 +67,7 @@ set(TEST_SERVER_SOURCES
     unit/test_thread.cpp
 )
 
+# --- testClient Target ---
 add_executable(testClient ${TEST_CLIENT_SOURCES} ${CLIENT_PROD_SOURCES} ${SERVER_PROD_SOURCES})
 target_include_directories(testClient PRIVATE
     ${CMAKE_SOURCE_DIR}/Server
@@ -75,7 +77,8 @@ target_include_directories(testClient PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/support
     ${CMAKE_CURRENT_SOURCE_DIR}/unit
 )
-target_link_libraries(testClient PRIVATE GTest::gtest GTest::gtest_main ws2_32 oss_test_support)
+# CRITICAL FIX: Changed GTest::gtest / GTest::gtest_main to gtest / gtest_main
+target_link_libraries(testClient PRIVATE gtest gtest_main ws2_32 oss_test_support)
 target_compile_definitions(testClient PRIVATE ONLINE_SHOPPING_UNIT_TEST)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
@@ -88,6 +91,7 @@ endif()
 
 add_test(NAME testClient COMMAND testClient)
 
+# --- testServer Target ---
 add_executable(testServer ${TEST_SERVER_SOURCES} ${SERVER_PROD_SOURCES} ${CLIENT_PROD_SOURCES})
 
 target_include_directories(testServer PRIVATE
@@ -99,9 +103,10 @@ target_include_directories(testServer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/unit
 )
 
+# CRITICAL FIX: Changed GTest::gtest / GTest::gtest_main to gtest / gtest_main
 target_link_libraries(testServer PRIVATE
-    GTest::gtest
-    GTest::gtest_main
+    gtest
+    gtest_main
     ws2_32
     oss_test_support
 )
@@ -117,6 +122,7 @@ endif()
 
 add_test(NAME testServer COMMAND testServer)
 
+# --- Optional Local Coverage Target ---
 if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     add_custom_target(coverage
         COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/coverage
