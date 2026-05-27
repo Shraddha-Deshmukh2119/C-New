@@ -13,7 +13,7 @@ else()
     FetchContent_MakeAvailable(googletest)
 endif()
 
-add_library(oss_test_support STATIC common/test_runtime.cpp)
+add_library(oss_test_support STATIC test/support/test_runtime.cpp)
 
 set(CLIENT_PROD_SOURCES
     ${CMAKE_SOURCE_DIR}/Client/Headers/Client.cpp
@@ -35,35 +35,40 @@ set(SERVER_PROD_SOURCES
 )
 
 set(TEST_CLIENT_SOURCES
-    test/Headers/test_Cash.cpp
-    test/Headers/test_Client.cpp
-    test/Headers/test_Person.cpp
-    test/Headers/test_Customer.cpp
-    test/Headers/test_Employee.cpp
-    test/Headers/test_Admin.cpp
+    test/unit/test_admin.cpp
+    test/unit/test_admin_coverage.cpp
+    test/unit/test_admin_home_cases.cpp
+    test/unit/test_branch_targets.cpp
+    test/unit/test_cash.cpp
+    test/unit/test_client.cpp
+    test/unit/test_customer.cpp
+    test/unit/test_customer_coverage.cpp
+    test/unit/test_employee.cpp
+    test/unit/test_employee_coverage.cpp
+    test/unit/test_person.cpp
+    test/unit/test_person_coverage.cpp
+    test/unit/test_person_deep_branches.cpp
 )
 
 set(TEST_SERVER_SOURCES
-    test/Headers/test_Cash.cpp
-    test/Headers/test_Server.cpp
-    test/Headers/test_Thread.cpp
-    testServer/Headers/test_Person.cpp
-    testServer/Headers/test_Customer.cpp
-    testServer/Headers/test_Employee.cpp
-    testServer/Headers/test_Admin.cpp
-    testServer/Headers/test_Complaint_Base.cpp
-    testServer/Headers/test_Complaint_E.cpp
-    testServer/Headers/test_Complaint_C.cpp
+    test/unit/test_complaint_base.cpp
+    test/unit/test_complaint_coverage.cpp
+    test/unit/test_complaint_customer.cpp
+    test/unit/test_complaint_employee.cpp
+    test/unit/test_integration_network.cpp
+    test/unit/test_server.cpp
+    test/unit/test_thread.cpp
 )
 
 add_executable(testClient ${TEST_CLIENT_SOURCES} ${CLIENT_PROD_SOURCES})
 target_include_directories(testClient PRIVATE
     ${CMAKE_SOURCE_DIR}/Client
     ${CMAKE_SOURCE_DIR}/Client/Headers
-    ${CMAKE_CURRENT_SOURCE_DIR}/common
-    ${CMAKE_CURRENT_SOURCE_DIR}/testClient/Headers
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/support
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/unit
 )
 target_link_libraries(testClient PRIVATE GTest::gtest GTest::gtest_main ws2_32 oss_test_support)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_link_options(testClient PRIVATE
         "-Wl,--wrap=getch"
@@ -71,16 +76,25 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         "-Wl,--wrap=system"
     )
 endif()
+
 add_test(NAME testClient COMMAND testClient)
 
 add_executable(testServer ${TEST_SERVER_SOURCES} ${SERVER_PROD_SOURCES})
+
 target_include_directories(testServer PRIVATE
     ${CMAKE_SOURCE_DIR}/Server
     ${CMAKE_SOURCE_DIR}/Server/Headers
-    ${CMAKE_CURRENT_SOURCE_DIR}/common
-    ${CMAKE_CURRENT_SOURCE_DIR}/testServer/Headers
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/support
+    ${CMAKE_CURRENT_SOURCE_DIR}/test/unit
 )
-target_link_libraries(testServer PRIVATE GTest::gtest GTest::gtest_main ws2_32 oss_test_support)
+
+target_link_libraries(testServer PRIVATE
+    GTest::gtest
+    GTest::gtest_main
+    ws2_32
+    oss_test_support
+)
+
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_link_options(testServer PRIVATE
         "-Wl,--wrap=getch"
@@ -88,6 +102,7 @@ if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
         "-Wl,--wrap=system"
     )
 endif()
+
 add_test(NAME testServer COMMAND testServer)
 
 if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
