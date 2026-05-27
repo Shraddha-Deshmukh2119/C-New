@@ -1,6 +1,6 @@
 set(gtest_force_shared_crt ON CACHE BOOL "" FORCE)
 
-# Clean, modern FetchContent approach (Safe to leave here if removed from root)
+# Clean, modern FetchContent approach
 include(FetchContent)
 FetchContent_Declare(
     googletest
@@ -19,9 +19,9 @@ target_include_directories(oss_test_support PRIVATE
     ${CMAKE_SOURCE_DIR}/Server
     ${CMAKE_SOURCE_DIR}/Server/Headers
 )
-# CRITICAL FIX: Link gtest to your support library so test_fixture.h can find <gtest/gtest.h>
 target_link_libraries(oss_test_support PUBLIC gtest)
-target_compile_definitions(oss_test_support PRIVATE ONLINE_SHOPPING_UNIT_TEST)
+# Added HEADLESS_CI_BUILD to support utilities
+target_compile_definitions(oss_test_support PRIVATE ONLINE_SHOPPING_UNIT_TEST HEADLESS_CI_BUILD)
 
 # --- Source File Mappings ---
 set(CLIENT_PROD_SOURCES
@@ -77,9 +77,9 @@ target_include_directories(testClient PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/support
     ${CMAKE_CURRENT_SOURCE_DIR}/unit
 )
-# CRITICAL FIX: Changed GTest::gtest / GTest::gtest_main to gtest / gtest_main
 target_link_libraries(testClient PRIVATE gtest gtest_main ws2_32 oss_test_support)
-target_compile_definitions(testClient PRIVATE ONLINE_SHOPPING_UNIT_TEST)
+# CRITICAL FIX: Added HEADLESS_CI_BUILD definition to stop hanging inputs/loops
+target_compile_definitions(testClient PRIVATE ONLINE_SHOPPING_UNIT_TEST HEADLESS_CI_BUILD)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_link_options(testClient PRIVATE
@@ -103,14 +103,14 @@ target_include_directories(testServer PRIVATE
     ${CMAKE_CURRENT_SOURCE_DIR}/unit
 )
 
-# CRITICAL FIX: Changed GTest::gtest / GTest::gtest_main to gtest / gtest_main
 target_link_libraries(testServer PRIVATE
     gtest
     gtest_main
     ws2_32
     oss_test_support
 )
-target_compile_definitions(testServer PRIVATE ONLINE_SHOPPING_UNIT_TEST)
+# CRITICAL FIX: Added HEADLESS_CI_BUILD definition to stop hanging inputs/loops
+target_compile_definitions(testServer PRIVATE ONLINE_SHOPPING_UNIT_TEST HEADLESS_CI_BUILD)
 
 if(CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
     target_link_options(testServer PRIVATE
@@ -122,16 +122,5 @@ endif()
 
 add_test(NAME testServer COMMAND testServer)
 
-# --- Optional Local Coverage Target ---
-if(ENABLE_COVERAGE AND CMAKE_CXX_COMPILER_ID MATCHES "GNU|Clang")
-    add_custom_target(coverage
-        COMMAND ${CMAKE_COMMAND} -E make_directory ${CMAKE_BINARY_DIR}/coverage
-        COMMAND python -m gcovr -r ${CMAKE_SOURCE_DIR} --object-directory ${CMAKE_BINARY_DIR}
-                --filter "Client/" --filter "Server/"
-                --xml ${CMAKE_BINARY_DIR}/coverage.xml
-                --html-details ${CMAKE_BINARY_DIR}/coverage/index.html
-        WORKING_DIRECTORY ${CMAKE_SOURCE_DIR}
-        COMMENT "Generating coverage.xml and HTML report (open build/coverage/index.html)"
-        VERBATIM
-    )
-endif()
+# REMOVED: add_custom_target(coverage) to prevent duplicate runs 
+# and file access conflicts with your Jenkinsfile process.
