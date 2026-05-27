@@ -1,6 +1,7 @@
 #pragma once
 
 #include <string>
+#include <winsock2.h>
 #include <windows.h>
 
 #ifdef ONLINE_SHOPPING_UNIT_TEST
